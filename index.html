@@ -10,45 +10,17 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
-        /* Sobrescribir estilos de Power Pages */
-        #content-container,
-        .container,
-        main,
-        .main-wrapper,
-        [role="main"] {
-            background: transparent !important;
-            background-color: transparent !important;
-        }
-        
-        /* Asegurar inputs oscuros */
-        input[type="text"],
-        input[type="search"] {
-            background: rgba(15, 23, 42, 0.6) !important;
-            background-color: rgba(15, 23, 42, 0.6) !important;
-            color: #e2e8f0 !important;
-        }
-        
-        input[type="text"]:focus,
-        input[type="search"]:focus {
-            background: rgba(15, 23, 42, 0.8) !important;
-            background-color: rgba(15, 23, 42, 0.8) !important;
-            color: #e2e8f0 !important;
-        }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%) !important;
-            background-attachment: fixed !important;
-            color: #2c3e50 !important;
-            overflow-x: hidden !important;
-            min-height: 100vh !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a;
+            color: #2c3e50;
+            overflow-x: hidden;
+            min-height: 100vh;
         }
-        
-        /* Asegurar que el html también tenga el fondo */
+
         html {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%) !important;
-            background-attachment: fixed !important;
+            background: #0f172a;
         }
 
         /* Animated Background */
@@ -101,7 +73,7 @@
             75% { transform: translate(20px, 30px) scale(1.05); }
         }
 
-        /* Sidebar */
+        /* Sidebar - igual que antes */
         .sidebar {
             position: fixed;
             left: 0;
@@ -192,6 +164,7 @@
             font-size: 14px;
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
             transition: all 0.3s ease;
+            border: none;
         }
 
         .toggle-btn:hover {
@@ -336,44 +309,25 @@
         }
 
         .search-input {
-            width: 100% !important;
-            padding: 14px 20px 14px 50px !important;
-            border: 2px solid rgba(71, 85, 105, 0.5) !important;
-            border-radius: 12px !important;
-            font-size: 14px !important;
-            background: rgba(15, 23, 42, 0.6) !important;
-            background-color: rgba(15, 23, 42, 0.6) !important;
-            color: #e2e8f0 !important;
-            transition: all 0.3s ease !important;
+            width: 100%;
+            padding: 14px 20px 14px 50px;
+            border: 2px solid rgba(71, 85, 105, 0.5);
+            border-radius: 12px;
+            font-size: 14px;
+            background: rgba(15, 23, 42, 0.6);
+            color: #e2e8f0;
+            transition: all 0.3s ease;
         }
 
         .search-input:focus {
-            outline: none !important;
-            border-color: #667eea !important;
-            background: rgba(15, 23, 42, 0.8) !important;
-            background-color: rgba(15, 23, 42, 0.8) !important;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1) !important;
-            color: #e2e8f0 !important;
+            outline: none;
+            border-color: #667eea;
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
 
         .search-input::placeholder {
-            color: #64748b !important;
-            opacity: 1 !important;
-        }
-        
-        .search-input::-webkit-input-placeholder {
-            color: #64748b !important;
-            opacity: 1 !important;
-        }
-        
-        .search-input::-moz-placeholder {
-            color: #64748b !important;
-            opacity: 1 !important;
-        }
-        
-        .search-input:-ms-input-placeholder {
-            color: #64748b !important;
-            opacity: 1 !important;
+            color: #64748b;
         }
 
         .search-icon {
@@ -383,11 +337,6 @@
             transform: translateY(-50%);
             color: #64748b;
             font-size: 18px;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus + .search-icon {
-            color: #667eea;
         }
 
         .topbar-actions {
@@ -503,10 +452,6 @@
             font-weight: 700;
             color: white;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .welcome-subtitle {
@@ -765,6 +710,191 @@
             transform: translateX(5px);
         }
 
+        /* Modals and Panels */
+        .panel {
+            display: none;
+            position: fixed;
+            top: 80px;
+            right: 0;
+            width: 400px;
+            height: calc(100vh - 80px);
+            background: rgba(30, 41, 59, 0.98);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(102, 126, 234, 0.2);
+            padding: 30px;
+            z-index: 1500;
+            overflow-y: auto;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+            animation: slideInRight 0.3s ease;
+        }
+
+        .panel.show {
+            display: block;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .panel-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .close-panel {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-panel:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .notification-item,
+        .message-item {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 3px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-item:hover,
+        .message-item:hover {
+            background: rgba(15, 23, 42, 0.8);
+            transform: translateX(5px);
+        }
+
+        .notification-title,
+        .message-sender {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .notification-text,
+        .message-text {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .notification-time,
+        .message-time {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        .user-menu {
+            display: none;
+            position: fixed;
+            top: 80px;
+            right: 40px;
+            width: 280px;
+            background: rgba(30, 41, 59, 0.98);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            z-index: 1500;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: fadeInDown 0.3s ease;
+        }
+
+        .user-menu.show {
+            display: block;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-menu-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            margin-bottom: 15px;
+        }
+
+        .user-menu-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .user-menu-info h4 {
+            font-size: 16px;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .user-menu-info p {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .user-menu-item {
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #e2e8f0;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-menu-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: white;
+        }
+
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -774,15 +904,6 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
             }
         }
 
@@ -820,29 +941,210 @@
             .main-content {
                 padding: 20px;
             }
+
+            .panel {
+                width: 100%;
+            }
         }
 
-        /* Tooltip */
-        .nav-item[data-tooltip] {
-            position: relative;
+        /* Modal Crear Ticket - Simple */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
         }
 
-        .sidebar.collapsed .nav-item[data-tooltip]:hover::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            left: 100%;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(30, 41, 59, 0.95);
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background-color: #1e293b;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 2px solid #667eea;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
             color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
+        }
+
+        .close-modal {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background-color: #ef4444;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid rgba(71, 85, 105, 0.5);
+            border-radius: 10px;
+            font-size: 14px;
+            background-color: rgba(15, 23, 42, 0.6);
+            color: #e2e8f0;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-select option {
+            background-color: #1e293b;
+            color: #e2e8f0;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn-cancel {
+            padding: 12px 24px;
+            border: 2px solid #64748b;
+            background: transparent;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background-color: rgba(100, 116, 139, 0.1);
+            border-color: #94a3b8;
+            color: #cbd5e1;
+        }
+
+        .btn-submit {
+            padding: 12px 32px;
+            border: none;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Search Results */
+        .search-results {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(30, 41, 59, 0.98);
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            margin-top: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 2000;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .search-results.show {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .search-result-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .search-result-desc {
             font-size: 12px;
-            white-space: nowrap;
-            margin-left: 10px;
-            z-index: 1001;
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            color: #94a3b8;
         }
     </style>
 </head>
@@ -868,16 +1170,16 @@
 
         <div class="nav-section">
             <div class="nav-section-title">Principal</div>
-            <div class="nav-item active" data-tooltip="Dashboard" onclick="navigate('dashboard')">
+            <div class="nav-item active" onclick="navigate('dashboard')">
                 <span class="nav-icon">&#128202;</span>
                 <span class="nav-label">Dashboard</span>
             </div>
-            <div class="nav-item" data-tooltip="Mi Trabajo" onclick="navigate('mywork')">
+            <div class="nav-item" onclick="navigate('mywork')">
                 <span class="nav-icon">&#128188;</span>
                 <span class="nav-label">Mi Trabajo</span>
                 <span class="nav-badge">24</span>
             </div>
-            <div class="nav-item" data-tooltip="Tickets" onclick="navigate('tickets')">
+            <div class="nav-item" onclick="navigate('tickets')">
                 <span class="nav-icon">&#127915;</span>
                 <span class="nav-label">Tickets</span>
                 <span class="nav-badge">8</span>
@@ -886,15 +1188,15 @@
 
         <div class="nav-section">
             <div class="nav-section-title">Gestión</div>
-            <div class="nav-item" data-tooltip="Usuarios" onclick="navigate('users')">
+            <div class="nav-item" onclick="navigate('users')">
                 <span class="nav-icon">&#128101;</span>
                 <span class="nav-label">Usuarios</span>
             </div>
-            <div class="nav-item" data-tooltip="Equipos" onclick="navigate('teams')">
+            <div class="nav-item" onclick="navigate('teams')">
                 <span class="nav-icon">&#128104;&#8205;&#128105;&#8205;&#128103;</span>
                 <span class="nav-label">Equipos</span>
             </div>
-            <div class="nav-item" data-tooltip="Categorías" onclick="navigate('categories')">
+            <div class="nav-item" onclick="navigate('categories')">
                 <span class="nav-icon">&#128193;</span>
                 <span class="nav-label">Categorías</span>
             </div>
@@ -902,11 +1204,11 @@
 
         <div class="nav-section">
             <div class="nav-section-title">Analíticas</div>
-            <div class="nav-item" data-tooltip="Reportes" onclick="navigate('reports')">
+            <div class="nav-item" onclick="navigate('reports')">
                 <span class="nav-icon">&#128200;</span>
                 <span class="nav-label">Reportes</span>
             </div>
-            <div class="nav-item" data-tooltip="Métricas" onclick="navigate('metrics')">
+            <div class="nav-item" onclick="navigate('metrics')">
                 <span class="nav-icon">&#128201;</span>
                 <span class="nav-label">Métricas</span>
             </div>
@@ -914,11 +1216,11 @@
 
         <div class="nav-section">
             <div class="nav-section-title">Recursos</div>
-            <div class="nav-item" data-tooltip="Base de Conocimiento" onclick="navigate('knowledge')">
+            <div class="nav-item" onclick="navigate('knowledge')">
                 <span class="nav-icon">&#128218;</span>
                 <span class="nav-label">Base de Conocimiento</span>
             </div>
-            <div class="nav-item" data-tooltip="Configuración" onclick="navigate('settings')">
+            <div class="nav-item" onclick="navigate('settings')">
                 <span class="nav-icon">&#9881;</span>
                 <span class="nav-label">Configuración</span>
             </div>
@@ -928,23 +1230,26 @@
     <!-- Topbar -->
     <div class="topbar">
         <div class="search-container">
-            <input type="text" class="search-input" placeholder="Buscar tickets, usuarios, artículos..." id="searchInput">
+            <input type="text" class="search-input" placeholder="Buscar en todo el sistema..." id="searchInput">
             <span class="search-icon">&#128269;</span>
+            <div class="search-results" id="searchResults">
+                <!-- Resultados dinámicos -->
+            </div>
         </div>
         <div class="topbar-actions">
-            <div class="action-btn" onclick="showNotifications()">
+            <div class="action-btn" onclick="toggleNotifications()">
                 <span>&#128276;</span>
-                <span class="badge-count">12</span>
+                <span class="badge-count" id="notifCount">12</span>
             </div>
-            <div class="action-btn" onclick="showMessages()">
+            <div class="action-btn" onclick="toggleMessages()">
                 <span>&#9993;</span>
-                <span class="badge-count">5</span>
+                <span class="badge-count" id="msgCount">5</span>
             </div>
-            <button class="btn-new" onclick="createNew()">
+            <button class="btn-new" onclick="openCreateTicket()">
                 <span>+</span>
                 Nuevo Ticket
             </button>
-            <div class="user-avatar" onclick="showProfile()">JD</div>
+            <div class="user-avatar" onclick="toggleUserMenu()">JD</div>
         </div>
     </div>
 
@@ -957,7 +1262,7 @@
 
         <!-- Stats Grid -->
         <div class="stats-grid">
-            <div class="stat-card" onclick="window.location.href='plume-tickets.html'">
+            <div class="stat-card" onclick="navigate('tickets')">
                 <div class="stat-icon">&#127915;</div>
                 <div class="stat-value" id="openTickets">24</div>
                 <div class="stat-label">Tickets Abiertos</div>
@@ -1000,7 +1305,7 @@
 
         <!-- Menu Grid -->
         <div class="menu-grid">
-            <div class="menu-card" onclick="window.location.href='plume-tickets.html'">
+            <div class="menu-card" onclick="navigate('tickets')">
                 <div class="menu-icon-wrapper">
                     <span class="menu-icon">&#127915;</span>
                 </div>
@@ -1056,43 +1361,140 @@
         </div>
     </div>
 
+    <!-- Panel de Notificaciones -->
+    <div class="panel" id="notificationsPanel">
+        <div class="panel-header">
+            <h3 class="panel-title">Notificaciones</h3>
+            <button class="close-panel" onclick="closePanel('notificationsPanel')">×</button>
+        </div>
+        <div id="notificationsList">
+            <div class="notification-item">
+                <div class="notification-title">Nuevo ticket asignado</div>
+                <div class="notification-text">Se te ha asignado el ticket TKT-1007</div>
+                <div class="notification-time">Hace 5 minutos</div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-title">Ticket resuelto</div>
+                <div class="notification-text">TKT-1003 ha sido marcado como resuelto</div>
+                <div class="notification-time">Hace 1 hora</div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-title">Comentario nuevo</div>
+                <div class="notification-text">María García comentó en TKT-1001</div>
+                <div class="notification-time">Hace 2 horas</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de Mensajes -->
+    <div class="panel" id="messagesPanel">
+        <div class="panel-header">
+            <h3 class="panel-title">Mensajes</h3>
+            <button class="close-panel" onclick="closePanel('messagesPanel')">×</button>
+        </div>
+        <div id="messagesList">
+            <div class="message-item">
+                <div class="message-sender">Carlos López</div>
+                <div class="message-text">¿Puedes revisar el ticket de la VPN?</div>
+                <div class="message-time">Hace 10 minutos</div>
+            </div>
+            <div class="message-item">
+                <div class="message-sender">Ana Martínez</div>
+                <div class="message-text">El servidor ya está funcionando correctamente</div>
+                <div class="message-time">Hace 30 minutos</div>
+            </div>
+            <div class="message-item">
+                <div class="message-sender">Roberto Silva</div>
+                <div class="message-text">Reunión de equipo a las 3 PM</div>
+                <div class="message-time">Hace 1 hora</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menú de Usuario -->
+    <div class="user-menu" id="userMenu">
+        <div class="user-menu-header">
+            <div class="user-menu-avatar">JD</div>
+            <div class="user-menu-info">
+                <h4>Juan Díaz</h4>
+                <p>Administrador</p>
+            </div>
+        </div>
+        <div class="user-menu-item" onclick="goToProfile()">
+            <span>&#128100;</span>
+            <span>Mi Perfil</span>
+        </div>
+        <div class="user-menu-item" onclick="goToSettings()">
+            <span>&#9881;</span>
+            <span>Configuración</span>
+        </div>
+        <div class="user-menu-item" onclick="goToHelp()">
+            <span>&#10068;</span>
+            <span>Ayuda</span>
+        </div>
+        <div class="user-menu-item" onclick="logout()" style="color: #ef4444;">
+            <span>&#128682;</span>
+            <span>Cerrar Sesión</span>
+        </div>
+    </div>
+
+    <!-- Modal Crear Ticket -->
+    <div class="modal-overlay" id="createTicketModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Crear Nuevo Ticket</h2>
+                <button class="close-modal" onclick="closeCreateTicket()">×</button>
+            </div>
+            <form id="ticketForm" onsubmit="handleCreateTicket(event)">
+                <div class="form-group">
+                    <label class="form-label">Título del Ticket *</label>
+                    <input type="text" class="form-input" id="ticketTitle" required placeholder="Ej: Error en sistema de facturación">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Descripción *</label>
+                    <textarea class="form-textarea" id="ticketDescription" required placeholder="Describe el problema o solicitud..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Prioridad *</label>
+                    <select class="form-select" id="ticketPriority" required>
+                        <option value="">Seleccionar prioridad</option>
+                        <option value="low">Baja</option>
+                        <option value="medium">Media</option>
+                        <option value="high">Alta</option>
+                        <option value="urgent">Urgente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Categoría *</label>
+                    <select class="form-select" id="ticketCategory" required>
+                        <option value="">Seleccionar categoría</option>
+                        <option value="Sistema">Sistema</option>
+                        <option value="Hardware">Hardware</option>
+                        <option value="Software">Software</option>
+                        <option value="Red">Red</option>
+                        <option value="Accesos">Accesos</option>
+                        <option value="Datos">Datos</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeCreateTicket()">Cancelar</button>
+                    <button type="submit" class="btn-submit">Crear Ticket</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Forzar estilos después de que Power Pages cargue
-        function forceStyles() {
-            // Forzar fondo del body
-            document.body.style.background = 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)';
-            document.body.style.backgroundColor = '#0f172a';
-            document.documentElement.style.background = 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)';
-            document.documentElement.style.backgroundColor = '#0f172a';
-            
-            // Forzar color del input de búsqueda
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.style.backgroundColor = 'rgba(15, 23, 42, 0.6)';
-                searchInput.style.color = '#e2e8f0';
-                searchInput.style.border = '2px solid rgba(71, 85, 105, 0.5)';
-            }
-            
-            // Eliminar estilos de Power Pages que puedan interferir
-            const powerPagesContainers = document.querySelectorAll('#content-container, .container, main, .main-wrapper, [role="main"]');
-            powerPagesContainers.forEach(container => {
-                container.style.background = 'transparent';
-                container.style.backgroundColor = 'transparent';
-            });
-        }
-        
-        // Ejecutar al cargar y después de un pequeño delay
-        document.addEventListener('DOMContentLoaded', function() {
-            forceStyles();
-            setTimeout(forceStyles, 100);
-            setTimeout(forceStyles, 500);
-        });
-        
-        // También ejecutar cuando la página esté completamente cargada
-        window.addEventListener('load', function() {
-            forceStyles();
-        });
-        
+        // Datos de búsqueda
+        const searchableItems = [
+            { title: 'Gestión de Tickets', desc: 'Ver todos los tickets', action: () => navigate('tickets') },
+            { title: 'Mi Trabajo', desc: 'Ver mis tickets asignados', action: () => navigate('mywork') },
+            { title: 'Reportes', desc: 'Ver reportes y análisis', action: () => navigate('reports') },
+            { title: 'Usuarios', desc: 'Gestionar usuarios', action: () => navigate('users') },
+            { title: 'Configuración', desc: 'Ajustes del sistema', action: () => navigate('settings') }
+        ];
+
         // Toggle Sidebar
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -1104,13 +1506,10 @@
 
         // Navigation
         function navigate(page) {
-            console.log('Navegando a:', page);
-            
-            // Mapeo de páginas
             const pageMap = {
-                'dashboard': 'index.html',
+                'dashboard': 'plume-menu-animated.html',
                 'tickets': 'plume-tickets.html',
-                'mywork': '#',
+                'mywork': 'plume-mywork.html',
                 'users': '#',
                 'teams': '#',
                 'categories': '#',
@@ -1120,11 +1519,10 @@
                 'settings': '#'
             };
             
-            // Redirigir a la página correspondiente
             if (pageMap[page] && pageMap[page] !== '#') {
                 window.location.href = pageMap[page];
             } else {
-                console.log('Página no disponible aún:', page);
+                alert('Página en desarrollo: ' + page);
             }
         }
 
@@ -1132,26 +1530,158 @@
             window.location.href = 'plume-menu-animated.html';
         }
 
-        // Actions
-        function createNew() {
-            console.log('Crear nuevo ticket');
-            // En Power Pages: window.location.href = '/create-ticket';
+        // Búsqueda
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            
+            if (query === '') {
+                searchResults.classList.remove('show');
+                return;
+            }
+
+            const results = searchableItems.filter(item => 
+                item.title.toLowerCase().includes(query) || 
+                item.desc.toLowerCase().includes(query)
+            );
+
+            if (results.length > 0) {
+                searchResults.innerHTML = results.map(item => `
+                    <div class="search-result-item" onclick='${item.action.toString().replace('() => ', '')}'>
+                        <div class="search-result-title">${item.title}</div>
+                        <div class="search-result-desc">${item.desc}</div>
+                    </div>
+                `).join('');
+                searchResults.classList.add('show');
+            } else {
+                searchResults.innerHTML = '<div class="search-result-item"><div class="search-result-title">No se encontraron resultados</div></div>';
+                searchResults.classList.add('show');
+            }
+        });
+
+        // Cerrar resultados al hacer click fuera
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.classList.remove('show');
+            }
+        });
+
+        // Panels
+        function toggleNotifications() {
+            const panel = document.getElementById('notificationsPanel');
+            const messagesPanel = document.getElementById('messagesPanel');
+            const userMenu = document.getElementById('userMenu');
+            
+            messagesPanel.classList.remove('show');
+            userMenu.classList.remove('show');
+            panel.classList.toggle('show');
         }
 
-        function showNotifications() {
-            console.log('Mostrar notificaciones');
-            // En Power Pages: abrir panel de notificaciones
+        function toggleMessages() {
+            const panel = document.getElementById('messagesPanel');
+            const notifPanel = document.getElementById('notificationsPanel');
+            const userMenu = document.getElementById('userMenu');
+            
+            notifPanel.classList.remove('show');
+            userMenu.classList.remove('show');
+            panel.classList.toggle('show');
         }
 
-        function showMessages() {
-            console.log('Mostrar mensajes');
-            // En Power Pages: abrir panel de mensajes
+        function closePanel(panelId) {
+            document.getElementById(panelId).classList.remove('show');
         }
 
-        function showProfile() {
-            console.log('Mostrar perfil');
-            // En Power Pages: abrir menú de usuario
+        function toggleUserMenu() {
+            const menu = document.getElementById('userMenu');
+            const notifPanel = document.getElementById('notificationsPanel');
+            const messagesPanel = document.getElementById('messagesPanel');
+            
+            notifPanel.classList.remove('show');
+            messagesPanel.classList.remove('show');
+            menu.classList.toggle('show');
         }
+
+        // Cerrar paneles al hacer click fuera
+        document.addEventListener('click', function(e) {
+            const notifBtn = document.querySelector('.action-btn:nth-child(1)');
+            const msgBtn = document.querySelector('.action-btn:nth-child(2)');
+            const userAvatar = document.querySelector('.user-avatar');
+            
+            if (!notifBtn.contains(e.target) && !document.getElementById('notificationsPanel').contains(e.target)) {
+                document.getElementById('notificationsPanel').classList.remove('show');
+            }
+            
+            if (!msgBtn.contains(e.target) && !document.getElementById('messagesPanel').contains(e.target)) {
+                document.getElementById('messagesPanel').classList.remove('show');
+            }
+            
+            if (!userAvatar.contains(e.target) && !document.getElementById('userMenu').contains(e.target)) {
+                document.getElementById('userMenu').classList.remove('show');
+            }
+        });
+
+        // User menu actions
+        function goToProfile() {
+            alert('Ir a Mi Perfil');
+            navigate('profile');
+        }
+
+        function goToSettings() {
+            navigate('settings');
+        }
+
+        function goToHelp() {
+            alert('Abrir Centro de Ayuda');
+        }
+
+        function logout() {
+            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                alert('Cerrando sesión...');
+                // En Power Pages: redirigir a logout
+            }
+        }
+
+        // Modal Crear Ticket
+        function openCreateTicket() {
+            document.getElementById('createTicketModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCreateTicket() {
+            document.getElementById('createTicketModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+            document.getElementById('ticketForm').reset();
+        }
+
+        function handleCreateTicket(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('ticketTitle').value;
+            const description = document.getElementById('ticketDescription').value;
+            const priority = document.getElementById('ticketPriority').value;
+            const category = document.getElementById('ticketCategory').value;
+
+            alert('✅ Ticket creado exitosamente!\n\nTítulo: ' + title + '\nPrioridad: ' + priority + '\nCategoría: ' + category);
+            
+            closeCreateTicket();
+            
+            // En Power Pages: guardar en Dataverse y redirigir
+            setTimeout(() => {
+                navigate('tickets');
+            }, 1000);
+        }
+
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeCreateTicket();
+                closePanel('notificationsPanel');
+                closePanel('messagesPanel');
+                document.getElementById('userMenu').classList.remove('show');
+            }
+        });
 
         // Animated Counter
         function animateValue(id, start, end, duration) {
@@ -1172,7 +1702,7 @@
             }, stepTime);
         }
 
-        // Initialize on load
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             // Animar contadores
             setTimeout(() => {
@@ -1180,28 +1710,6 @@
                 animateValue('pendingTickets', 0, 8, 800);
                 animateValue('resolvedTickets', 0, 156, 1200);
             }, 300);
-
-            // Search functionality
-            document.getElementById('searchInput').addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                console.log('Buscando:', searchTerm);
-                // En Power Pages: realizar búsqueda en Dataverse
-            });
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            // Ctrl/Cmd + K para búsqueda
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                document.getElementById('searchInput').focus();
-            }
-            
-            // Ctrl/Cmd + N para nuevo ticket
-            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
-                e.preventDefault();
-                createNew();
-            }
         });
     </script>
 </body>

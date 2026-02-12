@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Plume Service Desk</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        /* SIDEBAR PROFESIONAL */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .logo-container {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .logo-text {
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar.collapsed .logo-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .logo-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .logo-subtitle {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-section {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-section-title {
+            padding: 0 20px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .sidebar.collapsed .nav-section-title {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            margin: 2px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: rgba(37, 99, 235, 0.15);
+            color: var(--primary);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--primary);
+            border-radius: 0 3px 3px 0;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .nav-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+
+        .nav-label {
+            margin-left: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .sidebar.collapsed .nav-label {
+            opacity: 0;
+            width: 0;
+            margin: 0;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .sidebar.collapsed .nav-badge {
+            display: none;
+        }
+
+        /* TOPBAR PROFESIONAL */
+        .topbar {
+            position: fixed;
+            left: 260px;
+            top: 0;
+            right: 0;
+            height: 64px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 32px;
+            z-index: 999;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar.collapsed + .topbar {
+            left: 70px;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 480px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 40px;
+            padding: 0 16px 0 40px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+        }
+
+        .search-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--text-secondary);
+        }
+
+        .search-results {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .search-results.active {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s ease;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        .search-result-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .search-result-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: 24px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .icon-btn:hover {
+            background: rgba(37, 99, 235, 0.1);
+            border-color: var(--primary);
+        }
+
+        .icon-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-secondary);
+        }
+
+        .icon-btn:hover svg {
+            fill: var(--text-primary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 5px;
+            border-radius: 8px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .btn-primary {
+            height: 40px;
+            padding: 0 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-primary svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            position: relative;
+        }
+
+        .user-menu:hover {
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.2;
+        }
+
+        /* DROPDOWN MENUS */
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            min-width: 280px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .dropdown-menu.active {
+            display: block;
+        }
+
+        .dropdown-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        .dropdown-item-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .dropdown-item-content {
+            flex: 1;
+        }
+
+        .dropdown-item-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .dropdown-item-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .dropdown-item-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .dropdown-footer {
+            padding: 12px 16px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .dropdown-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .dropdown-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* USER MENU DROPDOWN */
+        .user-dropdown {
+            min-width: 240px;
+        }
+
+        .user-dropdown .dropdown-item {
+            padding: 10px 16px;
+        }
+
+        .user-dropdown-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-dropdown-icon svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--text-secondary);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 260px;
+            margin-top: 64px;
+            padding: 32px;
+            min-height: calc(100vh - 64px);
+            transition: margin-left 0.3s ease;
+        }
+
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 70px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title-section {
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* PROJECT STATS */
+        .project-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-mini {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .stat-mini-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .stat-mini-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* TOOLBAR */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            height: 36px;
+            padding: 0 16px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            background: rgba(37, 99, 235, 0.1);
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-dark);
+            padding: 4px;
+            border-radius: 6px;
+        }
+
+        .view-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .view-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-secondary);
+        }
+
+        .view-btn:hover svg {
+            fill: var(--text-primary);
+        }
+
+        .view-btn.active {
+            background: var(--primary);
+        }
+
+        .view-btn.active svg {
+            fill: white;
+        }
+
+        /* PROJECTS GRID */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .project-card.status-active::before {
+            background: var(--success);
+        }
+
+        .project-card.status-planning::before {
+            background: var(--info);
+        }
+
+        .project-card.status-on-hold::before {
+            background: var(--warning);
+        }
+
+        .project-card.status-completed::before {
+            background: var(--secondary);
+        }
+
+        .project-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .project-id {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .project-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .project-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .project-progress {
+            margin-bottom: 20px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .progress-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-dark);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--info));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .project-team {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .team-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            margin-left: -8px;
+        }
+
+        .team-avatar:first-child {
+            margin-left: 0;
+        }
+
+        .team-more {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--bg-dark);
+            border: 2px solid var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-left: -8px;
+        }
+
+        .project-status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .status-planning {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+
+        .status-on-hold {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .status-completed {
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--secondary);
+        }
+
+        .project-deadline {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .project-deadline svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .project-deadline.urgent {
+            color: var(--danger);
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .modal-close svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-secondary);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn-secondary {
+            height: 40px;
+            padding: 0 20px;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(37, 99, 235, 0.1);
+            border-color: var(--primary);
+        }
+
+        /* TOAST NOTIFICATIONS */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            min-width: 320px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .toast-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .toast-message {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .toast.success .toast-icon svg {
+            fill: var(--success);
+        }
+
+        .toast.error .toast-icon svg {
+            fill: var(--danger);
+        }
+
+        .toast.info .toast-icon svg {
+            fill: var(--info);
+        }
+
+        .toast.warning .toast-icon svg {
+            fill: var(--warning);
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .sidebar .logo-text,
+            .sidebar .nav-label,
+            .sidebar .nav-badge,
+            .sidebar .nav-section-title {
+                display: none;
+            }
+
+            .topbar {
+                left: 70px;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <div class="logo-text">
+                <div class="logo-title">Plume Desk</div>
+                <div class="logo-subtitle">Enterprise</div>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Main Menu</div>
+            <div class="nav-item" onclick="navigate('dashboard')">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Dashboard</span>
+            </div>
+            <div class="nav-item" onclick="navigate('mywork')">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">My Work</span>
+                <span class="nav-badge">24</span>
+            </div>
+            <div class="nav-item" onclick="navigate('tickets')">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M22 10V6c0-1.11-.9-2-2-2H4c-1.1 0-1.99.89-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2s.9-2 2-2z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Tickets</span>
+                <span class="nav-badge">8</span>
+            </div>
+            <div class="nav-item active" onclick="navigate('projects')">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Projects</span>
+                <span class="nav-badge">5</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Management</div>
+            <div class="nav-item" onclick="navigate('users')">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Users</span>
+            </div>
+            <div class="nav-item" onclick="navigate('teams')">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 12.75c1.63 0 3.07.39 4.24.9 1.08.48 1.76 1.56 1.76 2.73V18H6v-1.61c0-1.18.68-2.26 1.76-2.73 1.17-.52 2.61-.91 4.24-.91zM4 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm1.13 1.1c-.37-.06-.74-.1-1.13-.1-.99 0-1.93.21-2.78.58C.48 14.9 0 15.62 0 16.43V18h4.5v-1.61c0-.83.23-1.61.63-2.29zM20 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4 3.43c0-.81-.48-1.53-1.22-1.85-.85-.37-1.79-.58-2.78-.58-.39 0-.76.04-1.13.1.4.68.63 1.46.63 2.29V18H24v-1.57zM12 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Teams</span>
+            </div>
+            <div class="nav-item" onclick="navigate('categories')">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Categories</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Analytics</div>
+            <div class="nav-item" onclick="navigate('reports')">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Reports</span>
+            </div>
+            <div class="nav-item" onclick="navigate('metrics')">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Metrics</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Resources</div>
+            <div class="nav-item" onclick="navigate('knowledge')">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Knowledge Base</span>
+            </div>
+            <div class="nav-item" onclick="navigate('settings')">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Settings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <div class="search-box">
+            <div class="search-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+            </div>
+            <input type="text" class="search-input" placeholder="Search projects, tasks, users..." id="searchInput">
+            <div class="search-results" id="searchResults"></div>
+        </div>
+
+        <div class="topbar-actions">
+            <button class="icon-btn" onclick="toggleNotifications()" id="notificationsBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                </svg>
+                <span class="notification-badge">12</span>
+                <div class="dropdown-menu" id="notificationsDropdown">
+                    <div class="dropdown-header">Notifications</div>
+                    <div class="dropdown-item" onclick="viewNotification('1')">
+                        <div class="dropdown-item-icon" style="background: rgba(37, 99, 235, 0.1);">
+                            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: var(--primary);">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                            </svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                            <div class="dropdown-item-title">New project assigned</div>
+                            <div class="dropdown-item-text">E-commerce Platform Redesign has been assigned to you</div>
+                            <div class="dropdown-item-time">5 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-item" onclick="viewNotification('2')">
+                        <div class="dropdown-item-icon" style="background: rgba(16, 185, 129, 0.1);">
+                            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: var(--success);">
+                                <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                            </svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                            <div class="dropdown-item-title">Task completed</div>
+                            <div class="dropdown-item-text">Database migration has been completed successfully</div>
+                            <div class="dropdown-item-time">1 hour ago</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-item" onclick="viewNotification('3')">
+                        <div class="dropdown-item-icon" style="background: rgba(245, 158, 11, 0.1);">
+                            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: var(--warning);">
+                                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                            </svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                            <div class="dropdown-item-title">Deadline approaching</div>
+                            <div class="dropdown-item-text">Mobile App Development deadline is in 2 days</div>
+                            <div class="dropdown-item-time">3 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-footer">
+                        <a href="#" onclick="viewAllNotifications()">View all notifications</a>
+                    </div>
+                </div>
+            </button>
+
+            <button class="icon-btn" onclick="toggleMessages()" id="messagesBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+                </svg>
+                <span class="notification-badge">5</span>
+                <div class="dropdown-menu" id="messagesDropdown">
+                    <div class="dropdown-header">Messages</div>
+                    <div class="dropdown-item" onclick="openMessage('1')">
+                        <div class="user-avatar" style="width: 36px; height: 36px;">AM</div>
+                        <div class="dropdown-item-content">
+                            <div class="dropdown-item-title">Ana Martínez</div>
+                            <div class="dropdown-item-text">Hey, can you review the latest design mockups?</div>
+                            <div class="dropdown-item-time">10 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-item" onclick="openMessage('2')">
+                        <div class="user-avatar" style="width: 36px; height: 36px; background: var(--success);">CR</div>
+                        <div class="dropdown-item-content">
+                            <div class="dropdown-item-title">Carlos Ruiz</div>
+                            <div class="dropdown-item-text">The API documentation is ready for review</div>
+                            <div class="dropdown-item-time">1 hour ago</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-item" onclick="openMessage('3')">
+                        <div class="user-avatar" style="width: 36px; height: 36px; background: var(--warning);">LG</div>
+                        <div class="dropdown-item-content">
+                            <div class="dropdown-item-title">Laura García</div>
+                            <div class="dropdown-item-text">Meeting rescheduled to 3 PM tomorrow</div>
+                            <div class="dropdown-item-time">2 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-footer">
+                        <a href="#" onclick="viewAllMessages()">View all messages</a>
+                    </div>
+                </div>
+            </button>
+
+            <button class="btn-primary" onclick="openNewProjectModal()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                </svg>
+                <span>New Project</span>
+            </button>
+
+            <div class="user-menu" onclick="toggleUserMenu()" id="userMenuBtn">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <div class="user-name">Juan Díaz</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+                <div class="dropdown-menu user-dropdown" id="userDropdown">
+                    <div class="dropdown-header">Juan Díaz</div>
+                    <div class="dropdown-item" onclick="navigateUser('profile')">
+                        <div class="user-dropdown-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                        </div>
+                        <span>My Profile</span>
+                    </div>
+                    <div class="dropdown-item" onclick="navigateUser('settings')">
+                        <div class="user-dropdown-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                            </svg>
+                        </div>
+                        <span>Settings</span>
+                    </div>
+                    <div class="dropdown-item" onclick="navigateUser('help')">
+                        <div class="user-dropdown-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
+                            </svg>
+                        </div>
+                        <span>Help & Support</span>
+                    </div>
+                    <div class="dropdown-item" onclick="logout()">
+                        <div class="user-dropdown-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                            </svg>
+                        </div>
+                        <span>Logout</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="page-header">
+            <div class="page-title-section">
+                <h1 class="page-title">Projects</h1>
+                <p class="page-subtitle">Manage and track all your projects in one place</p>
+            </div>
+        </div>
+
+        <!-- PROJECT STATS -->
+        <div class="project-stats">
+            <div class="stat-mini">
+                <div class="stat-mini-label">Total Projects</div>
+                <div class="stat-mini-value">28</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-label">Active</div>
+                <div class="stat-mini-value">12</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-label">In Planning</div>
+                <div class="stat-mini-value">8</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-label">Completed</div>
+                <div class="stat-mini-value">5</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-label">On Hold</div>
+                <div class="stat-mini-value">3</div>
+            </div>
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+            <div class="filter-group">
+                <button class="filter-btn active" onclick="filterProjects('all')">All Projects</button>
+                <button class="filter-btn" onclick="filterProjects('active')">Active</button>
+                <button class="filter-btn" onclick="filterProjects('planning')">Planning</button>
+                <button class="filter-btn" onclick="filterProjects('on-hold')">On Hold</button>
+                <button class="filter-btn" onclick="filterProjects('completed')">Completed</button>
+            </div>
+
+            <div class="view-toggle">
+                <button class="view-btn active" onclick="switchView('grid')">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                    </svg>
+                </button>
+                <button class="view-btn" onclick="switchView('list')">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- PROJECTS GRID -->
+        <div class="projects-grid" id="projectsGrid">
+            <!-- Project 1 -->
+            <div class="project-card status-active" data-project="active" onclick="openProject('1')">
+                <div class="project-header">
+                    <div>
+                        <div class="project-id">PRJ-2024-001</div>
+                        <h3 class="project-title">E-commerce Platform Redesign</h3>
+                    </div>
+                </div>
+                <p class="project-description">Complete redesign of the customer-facing e-commerce platform with improved UX, performance optimization, and mobile-first approach.</p>
+                
+                <div class="project-progress">
+                    <div class="progress-header">
+                        <span class="progress-label">Progress</span>
+                        <span class="progress-value">67%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 67%"></div>
+                    </div>
+                </div>
+
+                <div class="project-meta">
+                    <div class="project-team">
+                        <div class="team-avatar">AM</div>
+                        <div class="team-avatar" style="background: var(--success);">CR</div>
+                        <div class="team-avatar" style="background: var(--warning);">LG</div>
+                        <div class="team-more">+5</div>
+                    </div>
+                    <span class="project-status status-active">Active</span>
+                </div>
+
+                <div class="project-deadline">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
+                    </svg>
+                    <span>Due: March 15, 2025</span>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="project-card status-active" data-project="active" onclick="openProject('2')">
+                <div class="project-header">
+                    <div>
+                        <div class="project-id">PRJ-2024-002</div>
+                        <h3 class="project-title">Mobile App Development</h3>
+                    </div>
+                </div>
+                <p class="project-description">Native iOS and Android mobile application with real-time synchronization, offline mode, and advanced analytics dashboard.</p>
+                
+                <div class="project-progress">
+                    <div class="progress-header">
+                        <span class="progress-label">Progress</span>
+                        <span class="progress-value">45%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 45%"></div>
+                    </div>
+                </div>
+
+                <div class="project-meta">
+                    <div class="project-team">
+                        <div class="team-avatar" style="background: var(--info);">PS</div>
+                        <div class="team-avatar" style="background: var(--success);">MR</div>
+                        <div class="team-avatar" style="background: var(--warning);">DL</div>
+                        <div class="team-more">+3</div>
+                    </div>
+                    <span class="project-status status-active">Active</span>
+                </div>
+
+                <div class="project-deadline urgent">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
+                    </svg>
+                    <span>Due: Feb 14, 2025</span>
+                </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="project-card status-planning" data-project="planning" onclick="openProject('3')">
+                <div class="project-header">
+                    <div>
+                        <div class="project-id">PRJ-2024-003</div>
+                        <h3 class="project-title">Cloud Migration Initiative</h3>
+                    </div>
+                </div>
+                <p class="project-description">Migration of on-premise infrastructure to AWS cloud platform with containerization using Docker and Kubernetes orchestration.</p>
+                
+                <div class="project-progress">
+                    <div class="progress-header">
+                        <span class="progress-label">Progress</span>
+                        <span class="progress-value">15%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 15%"></div>
+                    </div>
+                </div>
+
+                <div class="project-meta">
+                    <div class="project-team">
+                        <div class="team-avatar">JD</div>
+                        <div class="team-avatar" style="background: var(--info);">TS</div>
+                        <div class="team-more">+2</div>
+                    </div>
+                    <span class="project-status status-planning">Planning</span>
+                </div>
+
+                <div class="project-deadline">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
+                    </svg>
+                    <span>Due: May 30, 2025</span>
+                </div>
+            </div>
+
+            <!-- Project 4 -->
+            <div class="project-card status-active" data-project="active" onclick="openProject('4')">
+                <div class="project-header">
+                    <div>
+                        <div class="project-id">PRJ-2024-004</div>
+                        <h3 class="project-title">CRM System Enhancement</h3>
+                    </div>
+                </div>
+                <p class="project-description">Enhanced CRM features including AI-powered lead scoring, automated workflows, and advanced reporting capabilities.</p>
+                
+                <div class="project-progress">
+                    <div class="progress-header">
+                        <span class="progress-label">Progress</span>
+                        <span class="progress-value">82%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 82%"></div>
+                    </div>
+                </div>
+
+                <div class="project-meta">
+                    <div class="project-team">
+                        <div class="team-avatar" style="background: var(--warning);">NK</div>
+                        <div class="team-avatar" style="background: var(--success);">FB</div>
+                        <div class="team-avatar" style="background: var(--info);">GH</div>
+                        <div class="team-more">+4</div>
+                    </div>
+                    <span class="project-status status-active">Active</span>
+                </div>
+
+                <div class="project-deadline">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
+                    </svg>
+                    <span>Due: Feb 28, 2025</span>
+                </div>
+            </div>
+
+            <!-- Project 5 -->
+            <div class="project-card status-on-hold" data-project="on-hold" onclick="openProject('5')">
+                <div class="project-header">
+                    <div>
+                        <div class="project-id">PRJ-2024-005</div>
+                        <h3 class="project-title">Security Audit & Compliance</h3>
+                    </div>
+                </div>
+                <p class="project-description">Comprehensive security audit, penetration testing, and implementation of compliance measures for ISO 27001 certification.</p>
+                
+                <div class="project-progress">
+                    <div class="progress-header">
+                        <span class="progress-label">Progress</span>
+                        <span class="progress-value">38%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 38%"></div>
+                    </div>
+                </div>
+
+                <div class="project-meta">
+                    <div class="project-team">
+                        <div class="team-avatar" style="background: var(--danger);">RF</div>
+                        <div class="team-avatar" style="background: var(--warning);">SV</div>
+                        <div class="team-more">+1</div>
+                    </div>
+                    <span class="project-status status-on-hold">On Hold</span>
+                </div>
+
+                <div class="project-deadline">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
+                    </svg>
+                    <span>Due: April 20, 2025</span>
+                </div>
+            </div>
+
+            <!-- Project 6 -->
+            <div class="project-card status-completed" data-project="completed" onclick="openProject('6')">
+                <div class="project-header">
+                    <div>
+                        <div class="project-id">PRJ-2024-006</div>
+                        <h3 class="project-title">Data Analytics Dashboard</h3>
+                    </div>
+                </div>
+                <p class="project-description">Real-time analytics dashboard with interactive visualizations, KPI tracking, and automated report generation capabilities.</p>
+                
+                <div class="project-progress">
+                    <div class="progress-header">
+                        <span class="progress-label">Progress</span>
+                        <span class="progress-value">100%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="project-meta">
+                    <div class="project-team">
+                        <div class="team-avatar" style="background: var(--info);">JM</div>
+                        <div class="team-avatar" style="background: var(--success);">AL</div>
+                        <div class="team-avatar" style="background: var(--primary);">TW</div>
+                    </div>
+                    <span class="project-status status-completed">Completed</span>
+                </div>
+
+                <div class="project-deadline" style="color: var(--success);">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                    </svg>
+                    <span>Completed on Jan 28, 2025</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW PROJECT MODAL -->
+    <div class="modal-overlay" id="newProjectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Project</h2>
+                <button class="modal-close" onclick="closeNewProjectModal()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="newProjectForm">
+                    <div class="form-group">
+                        <label class="form-label">Project Name</label>
+                        <input type="text" class="form-input" placeholder="Enter project name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" placeholder="Enter project description" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" required>
+                                <option value="">Select status</option>
+                                <option value="planning">Planning</option>
+                                <option value="active">Active</option>
+                                <option value="on-hold">On Hold</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Priority</label>
+                            <select class="form-select" required>
+                                <option value="">Select priority</option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Due Date</label>
+                            <input type="date" class="form-input" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Assign Team Members</label>
+                        <select class="form-select" multiple>
+                            <option value="1">Ana Martínez</option>
+                            <option value="2">Carlos Ruiz</option>
+                            <option value="3">Laura García</option>
+                            <option value="4">Pedro Sánchez</option>
+                            <option value="5">María Rodríguez</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeNewProjectModal()">Cancel</button>
+                <button class="btn-primary" onclick="createProject()">Create Project</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // NAVIGATION
+        function navigate(page) {
+            const pages = {
+                'dashboard': 'plume-menu-animated.html',
+                'tickets': 'plume-tickets.html',
+                'mywork': 'plume-mywork.html',
+                'projects': 'plume-projects.html'
+            };
+            if (pages[page]) {
+                window.location.href = pages[page];
+            }
+        }
+
+        // SEARCH FUNCTIONALITY
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        const searchData = [
+            { type: 'project', title: 'E-commerce Platform Redesign', meta: 'PRJ-2024-001 • Active' },
+            { type: 'project', title: 'Mobile App Development', meta: 'PRJ-2024-002 • Active' },
+            { type: 'project', title: 'Cloud Migration Initiative', meta: 'PRJ-2024-003 • Planning' },
+            { type: 'project', title: 'CRM System Enhancement', meta: 'PRJ-2024-004 • Active' },
+            { type: 'task', title: 'Database Performance Issue', meta: 'TK-2847 • Critical' },
+            { type: 'user', title: 'Ana Martínez', meta: 'Product Designer' },
+            { type: 'user', title: 'Carlos Ruiz', meta: 'Backend Developer' }
+        ];
+
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            
+            if (query.length === 0) {
+                searchResults.classList.remove('active');
+                return;
+            }
+
+            const filtered = searchData.filter(item => 
+                item.title.toLowerCase().includes(query) || 
+                item.meta.toLowerCase().includes(query)
+            );
+
+            if (filtered.length > 0) {
+                searchResults.innerHTML = filtered.map(item => `
+                    <div class="search-result-item" onclick="selectSearchResult('${item.type}', '${item.title}')">
+                        <div class="search-result-title">${item.title}</div>
+                        <div class="search-result-meta">${item.meta}</div>
+                    </div>
+                `).join('');
+                searchResults.classList.add('active');
+            } else {
+                searchResults.innerHTML = `
+                    <div class="search-result-item">
+                        <div class="search-result-title">No results found</div>
+                        <div class="search-result-meta">Try a different search term</div>
+                    </div>
+                `;
+                searchResults.classList.add('active');
+            }
+        });
+
+        function selectSearchResult(type, title) {
+            showToast('success', 'Search Result', `Opening ${type}: ${title}`);
+            searchResults.classList.remove('active');
+            searchInput.value = '';
+        }
+
+        // Close search results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-box')) {
+                searchResults.classList.remove('active');
+            }
+        });
+
+        // NOTIFICATIONS
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationsDropdown');
+            const messagesDropdown = document.getElementById('messagesDropdown');
+            const userDropdown = document.getElementById('userDropdown');
+            
+            messagesDropdown.classList.remove('active');
+            userDropdown.classList.remove('active');
+            dropdown.classList.toggle('active');
+        }
+
+        function viewNotification(id) {
+            showToast('info', 'Notification', `Opening notification #${id}`);
+            document.getElementById('notificationsDropdown').classList.remove('active');
+        }
+
+        function viewAllNotifications() {
+            showToast('info', 'Notifications', 'Opening all notifications');
+            document.getElementById('notificationsDropdown').classList.remove('active');
+        }
+
+        // MESSAGES
+        function toggleMessages() {
+            const dropdown = document.getElementById('messagesDropdown');
+            const notificationsDropdown = document.getElementById('notificationsDropdown');
+            const userDropdown = document.getElementById('userDropdown');
+            
+            notificationsDropdown.classList.remove('active');
+            userDropdown.classList.remove('active');
+            dropdown.classList.toggle('active');
+        }
+
+        function openMessage(id) {
+            showToast('info', 'Message', `Opening message #${id}`);
+            document.getElementById('messagesDropdown').classList.remove('active');
+        }
+
+        function viewAllMessages() {
+            showToast('info', 'Messages', 'Opening all messages');
+            document.getElementById('messagesDropdown').classList.remove('active');
+        }
+
+        // USER MENU
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            const notificationsDropdown = document.getElementById('notificationsDropdown');
+            const messagesDropdown = document.getElementById('messagesDropdown');
+            
+            notificationsDropdown.classList.remove('active');
+            messagesDropdown.classList.remove('active');
+            dropdown.classList.toggle('active');
+        }
+
+        function navigateUser(page) {
+            showToast('info', 'Navigation', `Opening ${page}`);
+            document.getElementById('userDropdown').classList.remove('active');
+        }
+
+        function logout() {
+            showToast('success', 'Logout', 'Logging out...');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1500);
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#notificationsBtn')) {
+                document.getElementById('notificationsDropdown').classList.remove('active');
+            }
+            if (!e.target.closest('#messagesBtn')) {
+                document.getElementById('messagesDropdown').classList.remove('active');
+            }
+            if (!e.target.closest('#userMenuBtn')) {
+                document.getElementById('userDropdown').classList.remove('active');
+            }
+        });
+
+        // FILTERS
+        function filterProjects(filter) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const cards = document.querySelectorAll('.project-card');
+            
+            if (filter === 'all') {
+                cards.forEach(card => card.style.display = 'block');
+            } else {
+                cards.forEach(card => {
+                    const projectType = card.getAttribute('data-project');
+                    card.style.display = projectType === filter ? 'block' : 'none';
+                });
+            }
+
+            showToast('info', 'Filter Applied', `Showing ${filter} projects`);
+        }
+
+        function switchView(view) {
+            const buttons = document.querySelectorAll('.view-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.view-btn').classList.add('active');
+            
+            const grid = document.getElementById('projectsGrid');
+            
+            if (view === 'list') {
+                grid.style.gridTemplateColumns = '1fr';
+                showToast('info', 'View Changed', 'Switched to list view');
+            } else {
+                grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(380px, 1fr))';
+                showToast('info', 'View Changed', 'Switched to grid view');
+            }
+        }
+
+        // PROJECT MODAL
+        function openNewProjectModal() {
+            document.getElementById('newProjectModal').classList.add('active');
+        }
+
+        function closeNewProjectModal() {
+            document.getElementById('newProjectModal').classList.remove('active');
+            document.getElementById('newProjectForm').reset();
+        }
+
+        function createProject() {
+            const form = document.getElementById('newProjectForm');
+            if (form.checkValidity()) {
+                showToast('success', 'Project Created', 'New project has been created successfully');
+                closeNewProjectModal();
+            } else {
+                form.reportValidity();
+            }
+        }
+
+        function openProject(id) {
+            showToast('info', 'Project', `Opening project #${id}`);
+        }
+
+        // TOAST NOTIFICATIONS
+        function showToast(type, title, message) {
+            const container = document.getElementById('toastContainer');
+            
+            const icons = {
+                success: '<path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>',
+                error: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>',
+                info: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>',
+                warning: '<path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <svg viewBox="0 0 24 24">${icons[type]}</svg>
+                </div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // INIT
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.project-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.4s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 50);
+            });
+
+            // Welcome toast
+            setTimeout(() => {
+                showToast('success', 'Welcome Back!', 'You have 5 active projects');
+            }, 500);
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('newProjectModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeNewProjectModal();
+            }
+        });
+    </script>
+</body>
+</html>

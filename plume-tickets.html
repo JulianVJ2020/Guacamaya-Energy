@@ -1232,10 +1232,18 @@
 
         function navigate(page) {
             const pages = {
-                'dashboard': 'index.html',
-                'tickets': 'plume-tickets.html',
-                'mywork': 'plume-mywork.html',
-                'projects': 'plume-projects.html'
+                'dashboard':'index.html',     // ✅ Dashboard principal
+  'tickets':'plume-tickets.html',             // ✅ Gestión de tickets
+  'mywork':'plume-mywork.html',               // ✅ Mi trabajo
+  'projects':'plume-projects.html',           // ✅ Proyectos avanzados
+  'reports':'plume-reports.html',             // ✅ NUEVO - Reportes
+  'metrics':'plume-metrics.html',             // ✅ NUEVO - Métricas
+  'settings':'plume-settings.html',         // ✅ NUEVO - Configuración
+  'users': '#',                                 // En desarrollo
+  'teams': '#',                                // En desarrollo
+  'categories': '#',                            // En desarrollo
+  'knowledge': '#'                              // En desarrollo
+
             };
             if (pages[page]) window.location.href = pages[page];
         }

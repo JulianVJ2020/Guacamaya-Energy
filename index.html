@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plume Service Desk - Dashboard</title>
+    <title>Plume Service Desk - Enterprise Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -11,121 +11,71 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0f172a;
-            color: #2c3e50;
-            overflow-x: hidden;
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.5;
         }
 
-        html {
-            background: #0f172a;
-        }
-
-        /* Animated Background */
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .bg-circle {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
-            animation: float 20s infinite ease-in-out;
-        }
-
-        .bg-circle:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .bg-circle:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            top: 60%;
-            left: 80%;
-            animation-delay: 5s;
-        }
-
-        .bg-circle:nth-child(3) {
-            width: 400px;
-            height: 400px;
-            top: 40%;
-            left: 50%;
-            animation-delay: 10s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(30px, -30px) scale(1.1); }
-            50% { transform: translate(-20px, 20px) scale(0.9); }
-            75% { transform: translate(20px, 30px) scale(1.05); }
-        }
-
-        /* Sidebar - igual que antes */
+        /* SIDEBAR PROFESIONAL */
         .sidebar {
             position: fixed;
             left: 0;
             top: 0;
-            width: 280px;
+            width: 260px;
             height: 100vh;
-            background: rgba(30, 41, 59, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 30px 0;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
             z-index: 1000;
-            box-shadow: 4px 0 20px rgba(0,0,0,0.3);
-            border-right: 1px solid rgba(102, 126, 234, 0.2);
-            transition: all 0.3s ease;
+            transition: width 0.3s ease;
         }
 
         .sidebar.collapsed {
-            width: 80px;
+            width: 70px;
         }
 
-        .logo-section {
+        .logo-container {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            padding: 0 25px;
-            margin-bottom: 40px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            gap: 12px;
         }
 
-        .logo {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 24px;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-            transition: all 0.3s ease;
             flex-shrink: 0;
         }
 
-        .logo:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
+        .logo-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
         }
 
         .logo-text {
-            margin-left: 15px;
-            transition: all 0.3s ease;
+            transition: opacity 0.3s ease;
         }
 
         .sidebar.collapsed .logo-text {
@@ -135,124 +85,89 @@
         }
 
         .logo-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: white;
-            letter-spacing: -0.5px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
         }
 
         .logo-subtitle {
             font-size: 11px;
-            color: #94a3b8;
+            color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .toggle-btn {
-            position: absolute;
-            right: -15px;
-            top: 40px;
-            width: 30px;
-            height: 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: white;
-            font-size: 14px;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-            transition: all 0.3s ease;
-            border: none;
-        }
-
-        .toggle-btn:hover {
-            transform: scale(1.15);
-            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+            letter-spacing: 0.05em;
         }
 
         .nav-section {
-            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
         }
 
         .nav-section-title {
-            padding: 0 25px;
+            padding: 0 20px 12px;
             font-size: 11px;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             font-weight: 600;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
         }
 
         .sidebar.collapsed .nav-section-title {
             opacity: 0;
             height: 0;
             padding: 0;
-            margin: 0;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
-            padding: 12px 25px;
-            margin: 4px 15px;
+            padding: 10px 20px;
+            margin: 2px 12px;
+            border-radius: 6px;
             cursor: pointer;
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            color: #94a3b8;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
             position: relative;
-            overflow: hidden;
         }
 
-        .nav-item::before {
+        .nav-item:hover {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: rgba(37, 99, 235, 0.15);
+            color: var(--primary);
+        }
+
+        .nav-item.active::before {
             content: '';
             position: absolute;
             left: 0;
             top: 0;
-            height: 100%;
-            width: 4px;
-            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-            transform: scaleY(0);
-            transition: transform 0.3s ease;
-        }
-
-        .nav-item:hover::before,
-        .nav-item.active::before {
-            transform: scaleY(1);
-        }
-
-        .nav-item:hover {
-            background: rgba(102, 126, 234, 0.1);
-            color: white;
-            transform: translateX(5px);
-        }
-
-        .nav-item.active {
-            background: rgba(102, 126, 234, 0.15);
-            color: white;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            bottom: 0;
+            width: 3px;
+            background: var(--primary);
+            border-radius: 0 3px 3px 0;
         }
 
         .nav-icon {
-            font-size: 20px;
-            width: 24px;
-            transition: all 0.3s ease;
+            width: 20px;
+            height: 20px;
             flex-shrink: 0;
         }
 
-        .nav-item:hover .nav-icon {
-            transform: scale(1.2);
+        .nav-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
         }
 
         .nav-label {
-            margin-left: 15px;
+            margin-left: 12px;
             font-size: 14px;
             font-weight: 500;
             white-space: nowrap;
-            transition: all 0.3s ease;
         }
 
         .sidebar.collapsed .nav-label {
@@ -263,654 +178,444 @@
 
         .nav-badge {
             margin-left: auto;
-            background: #ef4444;
+            background: var(--danger);
             color: white;
             font-size: 10px;
-            font-weight: 700;
-            padding: 3px 8px;
+            font-weight: 600;
+            padding: 2px 6px;
             border-radius: 10px;
-            min-width: 20px;
+            min-width: 18px;
             text-align: center;
-            transition: all 0.3s ease;
         }
 
         .sidebar.collapsed .nav-badge {
-            opacity: 0;
-            width: 0;
-            padding: 0;
+            display: none;
         }
 
-        /* Topbar */
+        /* TOPBAR PROFESIONAL */
         .topbar {
             position: fixed;
-            left: 280px;
+            left: 260px;
             top: 0;
             right: 0;
-            height: 80px;
-            background: rgba(30, 41, 59, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            height: 64px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            padding: 0 40px;
+            padding: 0 32px;
             z-index: 999;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             transition: left 0.3s ease;
         }
 
         .sidebar.collapsed + .topbar {
-            left: 80px;
+            left: 70px;
         }
 
-        .search-container {
+        .search-box {
             flex: 1;
-            max-width: 600px;
+            max-width: 480px;
             position: relative;
         }
 
         .search-input {
             width: 100%;
-            padding: 14px 20px 14px 50px;
-            border: 2px solid rgba(71, 85, 105, 0.5);
-            border-radius: 12px;
+            height: 40px;
+            padding: 0 16px 0 40px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
             font-size: 14px;
-            background: rgba(15, 23, 42, 0.6);
-            color: #e2e8f0;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .search-input:focus {
             outline: none;
-            border-color: #667eea;
-            background: rgba(15, 23, 42, 0.8);
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.05);
         }
 
         .search-input::placeholder {
-            color: #64748b;
+            color: var(--text-secondary);
         }
 
         .search-icon {
             position: absolute;
-            left: 18px;
+            left: 12px;
             top: 50%;
             transform: translateY(-50%);
-            color: #64748b;
-            font-size: 18px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .search-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--text-secondary);
         }
 
         .topbar-actions {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-left: 30px;
+            gap: 12px;
+            margin-left: 24px;
         }
 
-        .action-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            border: 2px solid rgba(71, 85, 105, 0.5);
-            background: rgba(15, 23, 42, 0.6);
+        .icon-btn {
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
             cursor: pointer;
             position: relative;
-            transition: all 0.3s ease;
-            color: #e2e8f0;
-            font-size: 18px;
+            transition: all 0.2s ease;
         }
 
-        .action-btn:hover {
-            background: rgba(102, 126, 234, 0.2);
-            border-color: #667eea;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+        .icon-btn:hover {
+            background: rgba(37, 99, 235, 0.1);
+            border-color: var(--primary);
         }
 
-        .badge-count {
+        .icon-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-secondary);
+        }
+
+        .icon-btn:hover svg {
+            fill: var(--text-primary);
+        }
+
+        .notification-badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
             color: white;
             font-size: 10px;
-            font-weight: 700;
-            padding: 3px 7px;
-            border-radius: 10px;
-            border: 2px solid #1e293b;
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+            font-weight: 600;
+            padding: 2px 5px;
+            border-radius: 8px;
+            min-width: 18px;
+            text-align: center;
         }
 
-        .btn-new {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        .btn-primary {
+            height: 40px;
+            padding: 0 20px;
+            background: var(--primary);
             color: white;
-            padding: 12px 24px;
-            border-radius: 12px;
             border: none;
-            font-weight: 600;
+            border-radius: 6px;
             font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transition: background 0.2s ease;
         }
 
-        .btn-new:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-primary svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .user-menu:hover {
+            background: rgba(37, 99, 235, 0.1);
         }
 
         .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
             color: white;
-            font-weight: 700;
-            cursor: pointer;
-            border: 3px solid rgba(102, 126, 234, 0.3);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
-        .user-avatar:hover {
-            transform: scale(1.1);
-            border-color: #667eea;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        .user-info {
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Main Content */
+        .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.2;
+        }
+
+        /* MAIN CONTENT */
         .main-content {
-            margin-left: 280px;
-            margin-top: 80px;
-            padding: 40px;
-            min-height: calc(100vh - 80px);
+            margin-left: 260px;
+            margin-top: 64px;
+            padding: 32px;
+            min-height: calc(100vh - 64px);
             transition: margin-left 0.3s ease;
-            position: relative;
-            z-index: 1;
         }
 
         .sidebar.collapsed ~ .main-content {
-            margin-left: 80px;
+            margin-left: 70px;
         }
 
-        /* Welcome Section */
-        .welcome-section {
-            margin-bottom: 40px;
-            animation: fadeInUp 0.6s ease;
+        .page-header {
+            margin-bottom: 32px;
         }
 
-        .welcome-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 10px;
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
         }
 
-        .welcome-subtitle {
-            font-size: 16px;
-            color: #94a3b8;
+        .page-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
         }
 
-        /* Stats Grid */
+        /* STATS GRID PROFESIONAL */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 30px;
-            border: 2px solid transparent;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            transition: all 0.2s ease;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.6s ease;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-        }
-
-        .stat-card:hover::before {
-            transform: scaleX(1);
         }
 
         .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            border-color: rgba(102, 126, 234, 0.3);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
-        .stat-card:nth-child(1) { animation-delay: 0.1s; }
-        .stat-card:nth-child(2) { animation-delay: 0.2s; }
-        .stat-card:nth-child(3) { animation-delay: 0.3s; }
-        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
 
         .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
         }
 
-        .stat-card:hover .stat-icon {
-            transform: scale(1.1) rotate(5deg);
+        .stat-icon svg {
+            width: 22px;
+            height: 22px;
         }
 
         .stat-card:nth-child(1) .stat-icon {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        .stat-card:nth-child(1) .stat-icon svg {
+            fill: var(--primary);
         }
 
         .stat-card:nth-child(2) .stat-icon {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .stat-card:nth-child(2) .stat-icon svg {
+            fill: var(--warning);
         }
 
         .stat-card:nth-child(3) .stat-icon {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .stat-card:nth-child(3) .stat-icon svg {
+            fill: var(--success);
         }
 
         .stat-card:nth-child(4) .stat-icon {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            background: rgba(239, 68, 68, 0.1);
         }
 
-        .stat-value {
-            font-size: 36px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 8px;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
+        .stat-card:nth-child(4) .stat-icon svg {
+            fill: var(--danger);
         }
 
         .stat-trend {
             display: flex;
             align-items: center;
-            gap: 5px;
-            margin-top: 12px;
+            gap: 4px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .trend-up {
-            color: #10b981;
+            color: var(--success);
         }
 
         .trend-down {
-            color: #ef4444;
+            color: var(--danger);
         }
 
-        /* Menu Grid */
-        .menu-grid {
+        .stat-trend svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-footer {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* MÓDULOS GRID */
+        .modules-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
         }
 
-        .menu-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 24px;
-            padding: 35px;
+        .module-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 28px;
+            transition: all 0.2s ease;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid transparent;
             position: relative;
             overflow: hidden;
-            animation: fadeInUp 0.6s ease;
         }
 
-        .menu-card::after {
+        .module-card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
-            transform: scale(0);
-            transition: transform 0.6s ease;
-        }
-
-        .menu-card:hover::after {
-            transform: scale(1);
-        }
-
-        .menu-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
-            border-color: rgba(102, 126, 234, 0.3);
-        }
-
-        .menu-card:nth-child(1) { animation-delay: 0.2s; }
-        .menu-card:nth-child(2) { animation-delay: 0.3s; }
-        .menu-card:nth-child(3) { animation-delay: 0.4s; }
-        .menu-card:nth-child(4) { animation-delay: 0.5s; }
-        .menu-card:nth-child(5) { animation-delay: 0.6s; }
-        .menu-card:nth-child(6) { animation-delay: 0.7s; }
-
-        .menu-icon-wrapper {
-            width: 70px;
-            height: 70px;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 24px;
-            position: relative;
-            z-index: 1;
-            transition: all 0.4s ease;
-        }
-
-        .menu-card:hover .menu-icon-wrapper {
-            transform: scale(1.15) rotate(-5deg);
-        }
-
-        .menu-card:nth-child(1) .menu-icon-wrapper {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            box-shadow: 0 8px 20px rgba(251, 191, 36, 0.3);
-        }
-
-        .menu-card:nth-child(2) .menu-icon-wrapper {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-        }
-
-        .menu-card:nth-child(3) .menu-icon-wrapper {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
-        }
-
-        .menu-card:nth-child(4) .menu-icon-wrapper {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .menu-card:nth-child(5) .menu-icon-wrapper {
-            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
-        }
-
-        .menu-card:nth-child(6) .menu-icon-wrapper {
-            background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
-            box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
-        }
-
-        .menu-icon {
-            font-size: 32px;
-        }
-
-        .menu-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 12px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .menu-description {
-            font-size: 14px;
-            color: #64748b;
-            line-height: 1.6;
-            position: relative;
-            z-index: 1;
-        }
-
-        .menu-arrow {
-            position: absolute;
-            bottom: 25px;
-            right: 25px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(102, 126, 234, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #667eea;
-            font-size: 18px;
-            transition: all 0.3s ease;
-            z-index: 1;
-        }
-
-        .menu-card:hover .menu-arrow {
-            background: #667eea;
-            color: white;
-            transform: translateX(5px);
-        }
-
-        /* Modals and Panels */
-        .panel {
-            display: none;
-            position: fixed;
-            top: 80px;
+            top: 0;
+            left: 0;
             right: 0;
-            width: 400px;
-            height: calc(100vh - 80px);
-            background: rgba(30, 41, 59, 0.98);
-            backdrop-filter: blur(10px);
-            border-left: 1px solid rgba(102, 126, 234, 0.2);
-            padding: 30px;
-            z-index: 1500;
-            overflow-y: auto;
-            box-shadow: -4px 0 20px rgba(0,0,0,0.3);
-            animation: slideInRight 0.3s ease;
+            height: 3px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
 
-        .panel.show {
-            display: block;
+        .module-card:hover::before {
+            transform: scaleX(1);
         }
 
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-            }
-            to {
-                transform: translateX(0);
-            }
+        .module-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
 
-        .panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
-        }
-
-        .panel-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .close-panel {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-            font-size: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .close-panel:hover {
-            background: #ef4444;
-            color: white;
-        }
-
-        .notification-item,
-        .message-item {
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border-left: 3px solid #667eea;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .notification-item:hover,
-        .message-item:hover {
-            background: rgba(15, 23, 42, 0.8);
-            transform: translateX(5px);
-        }
-
-        .notification-title,
-        .message-sender {
-            font-size: 14px;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 5px;
-        }
-
-        .notification-text,
-        .message-text {
-            font-size: 13px;
-            color: #94a3b8;
-            margin-bottom: 8px;
-        }
-
-        .notification-time,
-        .message-time {
-            font-size: 11px;
-            color: #64748b;
-        }
-
-        .user-menu {
-            display: none;
-            position: fixed;
-            top: 80px;
-            right: 40px;
-            width: 280px;
-            background: rgba(30, 41, 59, 0.98);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            border-radius: 16px;
-            padding: 20px;
-            z-index: 1500;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            animation: fadeInDown 0.3s ease;
-        }
-
-        .user-menu.show {
-            display: block;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .user-menu-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
-            margin-bottom: 15px;
-        }
-
-        .user-menu-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        .user-menu-info h4 {
-            font-size: 16px;
-            color: white;
-            margin-bottom: 4px;
-        }
-
-        .user-menu-info p {
-            font-size: 12px;
-            color: #94a3b8;
-        }
-
-        .user-menu-item {
-            padding: 12px;
+        .module-icon {
+            width: 52px;
+            height: 52px;
             border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #e2e8f0;
-            font-size: 14px;
+            background: rgba(37, 99, 235, 0.1);
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
         }
 
-        .user-menu-item:hover {
-            background: rgba(102, 126, 234, 0.1);
-            color: white;
+        .module-icon svg {
+            width: 26px;
+            height: 26px;
+            fill: var(--primary);
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .module-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: -0.01em;
         }
 
-        /* Responsive */
+        .module-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .module-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .module-action svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
         @media (max-width: 1024px) {
             .sidebar {
-                width: 80px;
+                width: 70px;
             }
 
             .sidebar .logo-text,
@@ -921,793 +626,434 @@
             }
 
             .topbar {
-                left: 80px;
+                left: 70px;
             }
 
             .main-content {
-                margin-left: 80px;
+                margin-left: 70px;
             }
         }
 
         @media (max-width: 768px) {
-            .menu-grid {
-                grid-template-columns: 1fr;
-            }
-
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .main-content {
-                padding: 20px;
+            .modules-grid {
+                grid-template-columns: 1fr;
             }
 
-            .panel {
-                width: 100%;
+            .user-info {
+                display: none;
             }
-        }
-
-        /* Modal Crear Ticket - Simple */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-overlay.show {
-            display: flex;
-        }
-
-        .modal {
-            background-color: #1e293b;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            border: 2px solid #667eea;
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
-
-        .modal-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .close-modal {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            background-color: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .close-modal:hover {
-            background-color: #ef4444;
-            color: white;
-            transform: scale(1.1);
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #e2e8f0;
-            margin-bottom: 8px;
-        }
-
-        .form-input,
-        .form-textarea,
-        .form-select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid rgba(71, 85, 105, 0.5);
-            border-radius: 10px;
-            font-size: 14px;
-            background-color: rgba(15, 23, 42, 0.6);
-            color: #e2e8f0;
-            transition: all 0.3s ease;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .form-textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .form-input:focus,
-        .form-textarea:focus,
-        .form-select:focus {
-            outline: none;
-            border-color: #667eea;
-            background-color: rgba(15, 23, 42, 0.8);
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-select option {
-            background-color: #1e293b;
-            color: #e2e8f0;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            margin-top: 30px;
-        }
-
-        .btn-cancel {
-            padding: 12px 24px;
-            border: 2px solid #64748b;
-            background: transparent;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-cancel:hover {
-            background-color: rgba(100, 116, 139, 0.1);
-            border-color: #94a3b8;
-            color: #cbd5e1;
-        }
-
-        .btn-submit {
-            padding: 12px 32px;
-            border: none;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        /* Search Results */
-        .search-results {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: rgba(30, 41, 59, 0.98);
-            border: 2px solid #667eea;
-            border-radius: 12px;
-            margin-top: 10px;
-            max-height: 400px;
-            overflow-y: auto;
-            z-index: 2000;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-
-        .search-results.show {
-            display: block;
-        }
-
-        .search-result-item {
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .search-result-item:last-child {
-            border-bottom: none;
-        }
-
-        .search-result-item:hover {
-            background: rgba(102, 126, 234, 0.1);
-        }
-
-        .search-result-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 4px;
-        }
-
-        .search-result-desc {
-            font-size: 12px;
-            color: #94a3b8;
         }
     </style>
 </head>
 <body>
-    <!-- Animated Background -->
-    <div class="bg-animation">
-        <div class="bg-circle"></div>
-        <div class="bg-circle"></div>
-        <div class="bg-circle"></div>
-    </div>
-
-    <!-- Sidebar -->
+    <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
-        <button class="toggle-btn" onclick="toggleSidebar()">&#8592;</button>
-        
-        <div class="logo-section" onclick="goHome()">
-            <div class="logo">P</div>
+        <div class="logo-container">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            </div>
             <div class="logo-text">
-                <div class="logo-title">Plume</div>
-                <div class="logo-subtitle">Service Desk</div>
+                <div class="logo-title">Plume Desk</div>
+                <div class="logo-subtitle">Enterprise</div>
             </div>
         </div>
 
         <div class="nav-section">
-            <div class="nav-section-title">Principal</div>
+            <div class="nav-section-title">Main Menu</div>
             <div class="nav-item active" onclick="navigate('dashboard')">
-                <span class="nav-icon">&#128202;</span>
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                    </svg>
+                </div>
                 <span class="nav-label">Dashboard</span>
             </div>
             <div class="nav-item" onclick="navigate('mywork')">
-                <span class="nav-icon">&#128188;</span>
-                <span class="nav-label">Mi Trabajo</span>
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">My Work</span>
                 <span class="nav-badge">24</span>
             </div>
             <div class="nav-item" onclick="navigate('tickets')">
-                <span class="nav-icon">&#127915;</span>
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M22 10V6c0-1.11-.9-2-2-2H4c-1.1 0-1.99.89-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2s.9-2 2-2z"/>
+                    </svg>
+                </div>
                 <span class="nav-label">Tickets</span>
                 <span class="nav-badge">8</span>
             </div>
+            <div class="nav-item" onclick="navigate('projects')">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Projects</span>
+                <span class="nav-badge">5</span>
+            </div>
         </div>
 
         <div class="nav-section">
-            <div class="nav-section-title">Gestión</div>
+            <div class="nav-section-title">Management</div>
             <div class="nav-item" onclick="navigate('users')">
-                <span class="nav-icon">&#128101;</span>
-                <span class="nav-label">Usuarios</span>
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Users</span>
             </div>
             <div class="nav-item" onclick="navigate('teams')">
-                <span class="nav-icon">&#128104;&#8205;&#128105;&#8205;&#128103;</span>
-                <span class="nav-label">Equipos</span>
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 12.75c1.63 0 3.07.39 4.24.9 1.08.48 1.76 1.56 1.76 2.73V18H6v-1.61c0-1.18.68-2.26 1.76-2.73 1.17-.52 2.61-.91 4.24-.91zM4 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm1.13 1.1c-.37-.06-.74-.1-1.13-.1-.99 0-1.93.21-2.78.58C.48 14.9 0 15.62 0 16.43V18h4.5v-1.61c0-.83.23-1.61.63-2.29zM20 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4 3.43c0-.81-.48-1.53-1.22-1.85-.85-.37-1.79-.58-2.78-.58-.39 0-.76.04-1.13.1.4.68.63 1.46.63 2.29V18H24v-1.57zM12 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Teams</span>
             </div>
             <div class="nav-item" onclick="navigate('categories')">
-                <span class="nav-icon">&#128193;</span>
-                <span class="nav-label">Categorías</span>
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Categories</span>
             </div>
         </div>
 
         <div class="nav-section">
-            <div class="nav-section-title">Analíticas</div>
+            <div class="nav-section-title">Analytics</div>
             <div class="nav-item" onclick="navigate('reports')">
-                <span class="nav-icon">&#128200;</span>
-                <span class="nav-label">Reportes</span>
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Reports</span>
             </div>
             <div class="nav-item" onclick="navigate('metrics')">
-                <span class="nav-icon">&#128201;</span>
-                <span class="nav-label">Métricas</span>
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Metrics</span>
             </div>
         </div>
 
         <div class="nav-section">
-            <div class="nav-section-title">Recursos</div>
+            <div class="nav-section-title">Resources</div>
             <div class="nav-item" onclick="navigate('knowledge')">
-                <span class="nav-icon">&#128218;</span>
-                <span class="nav-label">Base de Conocimiento</span>
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Knowledge Base</span>
             </div>
             <div class="nav-item" onclick="navigate('settings')">
-                <span class="nav-icon">&#9881;</span>
-                <span class="nav-label">Configuración</span>
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Settings</span>
             </div>
         </div>
     </div>
 
-    <!-- Topbar -->
+    <!-- TOPBAR -->
     <div class="topbar">
-        <div class="search-container">
-            <input type="text" class="search-input" placeholder="Buscar en todo el sistema..." id="searchInput">
-            <span class="search-icon">&#128269;</span>
-            <div class="search-results" id="searchResults">
-                <!-- Resultados dinámicos -->
+        <div class="search-box">
+            <div class="search-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
             </div>
+            <input type="text" class="search-input" placeholder="Search everything...">
         </div>
+
         <div class="topbar-actions">
-            <div class="action-btn" onclick="toggleNotifications()">
-                <span>&#128276;</span>
-                <span class="badge-count" id="notifCount">12</span>
-            </div>
-            <div class="action-btn" onclick="toggleMessages()">
-                <span>&#9993;</span>
-                <span class="badge-count" id="msgCount">5</span>
-            </div>
-            <button class="btn-new" onclick="openCreateTicket()">
-                <span>+</span>
-                Nuevo Ticket
+            <button class="icon-btn" onclick="showNotifications()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                </svg>
+                <span class="notification-badge">12</span>
             </button>
-            <div class="user-avatar" onclick="toggleUserMenu()">JD</div>
+
+            <button class="icon-btn" onclick="showMessages()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+                </svg>
+                <span class="notification-badge">5</span>
+            </button>
+
+            <button class="btn-primary" onclick="openCreateTicket()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                </svg>
+                <span>New Ticket</span>
+            </button>
+
+            <div class="user-menu" onclick="showUserMenu()">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <div class="user-name">Juan Díaz</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- MAIN CONTENT -->
     <div class="main-content">
-        <div class="welcome-section">
-            <h1 class="welcome-title">Bienvenido al Service Desk &#128075;</h1>
-            <p class="welcome-subtitle">Aquí tienes un resumen de la actividad de hoy</p>
+        <div class="page-header">
+            <h1 class="page-title">Service Desk Dashboard</h1>
+            <p class="page-subtitle">Overview of your service desk operations and key metrics</p>
         </div>
 
-        <!-- Stats Grid -->
+        <!-- STATISTICS -->
         <div class="stats-grid">
             <div class="stat-card" onclick="navigate('tickets')">
-                <div class="stat-icon">&#127915;</div>
-                <div class="stat-value" id="openTickets">24</div>
-                <div class="stat-label">Tickets Abiertos</div>
-                <div class="stat-trend trend-up">
-                    <span>&#9650;</span>
-                    <span>12% vs ayer</span>
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M22 10V6c0-1.11-.9-2-2-2H4c-1.1 0-1.99.89-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2s.9-2 2-2z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-trend trend-up">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                        </svg>
+                        <span>12%</span>
+                    </div>
                 </div>
+                <div class="stat-value" id="openTickets">24</div>
+                <div class="stat-label">Open Tickets</div>
+                <div class="stat-footer">8 critical • 16 normal priority</div>
             </div>
 
             <div class="stat-card" onclick="navigate('mywork')">
-                <div class="stat-icon">&#9200;</div>
-                <div class="stat-value" id="pendingTickets">8</div>
-                <div class="stat-label">Pendientes Hoy</div>
-                <div class="stat-trend trend-down">
-                    <span>&#9660;</span>
-                    <span>5% vs ayer</span>
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-trend trend-down">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                        </svg>
+                        <span>5%</span>
+                    </div>
                 </div>
+                <div class="stat-value" id="pendingWork">8</div>
+                <div class="stat-label">Pending Today</div>
+                <div class="stat-footer">Avg. resolution time: 4.2 hours</div>
             </div>
 
             <div class="stat-card" onclick="navigate('reports')">
-                <div class="stat-icon">&#10003;</div>
-                <div class="stat-value" id="resolvedTickets">156</div>
-                <div class="stat-label">Resueltos</div>
-                <div class="stat-trend trend-up">
-                    <span>&#9650;</span>
-                    <span>8% vs ayer</span>
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-trend trend-up">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                        </svg>
+                        <span>8%</span>
+                    </div>
                 </div>
+                <div class="stat-value" id="resolvedTickets">156</div>
+                <div class="stat-label">Resolved This Month</div>
+                <div class="stat-footer">Target: 150 (104% achieved)</div>
             </div>
 
             <div class="stat-card" onclick="navigate('metrics')">
-                <div class="stat-icon">&#128077;</div>
-                <div class="stat-value">94<span style="font-size: 24px;">%</span></div>
-                <div class="stat-label">Satisfacción</div>
-                <div class="stat-trend trend-up">
-                    <span>&#9650;</span>
-                    <span>2% vs ayer</span>
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-trend trend-up">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                        </svg>
+                        <span>2%</span>
+                    </div>
                 </div>
+                <div class="stat-value">94%</div>
+                <div class="stat-label">Customer Satisfaction</div>
+                <div class="stat-footer">Based on 428 responses</div>
             </div>
         </div>
 
-        <!-- Menu Grid -->
-        <div class="menu-grid">
-            <div class="menu-card" onclick="navigate('tickets')">
-                <div class="menu-icon-wrapper">
-                    <span class="menu-icon">&#127915;</span>
+        <!-- MODULES -->
+        <div class="modules-grid">
+            <div class="module-card" onclick="navigate('tickets')">
+                <div class="module-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M22 10V6c0-1.11-.9-2-2-2H4c-1.1 0-1.99.89-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2s.9-2 2-2z"/>
+                    </svg>
                 </div>
-                <h3 class="menu-title">Gestión de Tickets</h3>
-                <p class="menu-description">Crea, visualiza y administra todos los tickets de soporte. Asigna prioridades y realiza seguimiento en tiempo real.</p>
-                <div class="menu-arrow">&#8594;</div>
+                <h3 class="module-title">Ticket Management</h3>
+                <p class="module-description">Create, track, and resolve customer support tickets with comprehensive workflow management and SLA tracking.</p>
+                <div class="module-action">
+                    <span>Manage Tickets</span>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
+                </div>
             </div>
 
-            <div class="menu-card" onclick="navigate('dashboard')">
-                <div class="menu-icon-wrapper">
-                    <span class="menu-icon">&#128200;</span>
+            <div class="module-card" onclick="navigate('projects')">
+                <div class="module-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
                 </div>
-                <h3 class="menu-title">Dashboard & Métricas</h3>
-                <p class="menu-description">Visualiza estadísticas en tiempo real, KPIs y análisis de rendimiento del equipo de soporte.</p>
-                <div class="menu-arrow">&#8594;</div>
+                <h3 class="module-title">Project Management</h3>
+                <p class="module-description">Advanced project planning with Gantt charts, resource allocation, AI predictions, and automated risk analysis.</p>
+                <div class="module-action">
+                    <span>View Projects</span>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
+                </div>
             </div>
 
-            <div class="menu-card" onclick="navigate('reports')">
-                <div class="menu-icon-wrapper">
-                    <span class="menu-icon">&#128202;</span>
+            <div class="module-card" onclick="navigate('reports')">
+                <div class="module-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
                 </div>
-                <h3 class="menu-title">Reportes Avanzados</h3>
-                <p class="menu-description">Genera reportes personalizados sobre SLA, tiempos de respuesta, resolución y más.</p>
-                <div class="menu-arrow">&#8594;</div>
+                <h3 class="module-title">Analytics & Reports</h3>
+                <p class="module-description">Generate detailed reports, track KPIs, analyze trends, and export custom analytics dashboards.</p>
+                <div class="module-action">
+                    <span>View Reports</span>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
+                </div>
             </div>
 
-            <div class="menu-card" onclick="navigate('users')">
-                <div class="menu-icon-wrapper">
-                    <span class="menu-icon">&#128101;</span>
+            <div class="module-card" onclick="navigate('users')">
+                <div class="module-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                    </svg>
                 </div>
-                <h3 class="menu-title">Gestión de Usuarios</h3>
-                <p class="menu-description">Administra usuarios, agentes, equipos, roles y permisos del sistema de manera centralizada.</p>
-                <div class="menu-arrow">&#8594;</div>
+                <h3 class="module-title">User Management</h3>
+                <p class="module-description">Manage users, teams, roles, permissions, and access control across the entire service desk platform.</p>
+                <div class="module-action">
+                    <span>Manage Users</span>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
+                </div>
             </div>
 
-            <div class="menu-card" onclick="navigate('knowledge')">
-                <div class="menu-icon-wrapper">
-                    <span class="menu-icon">&#128218;</span>
+            <div class="module-card" onclick="navigate('knowledge')">
+                <div class="module-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                    </svg>
                 </div>
-                <h3 class="menu-title">Base de Conocimiento</h3>
-                <p class="menu-description">Documenta soluciones, crea artículos y FAQs para autoservicio y capacitación.</p>
-                <div class="menu-arrow">&#8594;</div>
+                <h3 class="module-title">Knowledge Base</h3>
+                <p class="module-description">Build and maintain a comprehensive knowledge base with articles, FAQs, and self-service documentation.</p>
+                <div class="module-action">
+                    <span>Browse Articles</span>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
+                </div>
             </div>
 
-            <div class="menu-card" onclick="navigate('settings')">
-                <div class="menu-icon-wrapper">
-                    <span class="menu-icon">&#9881;</span>
+            <div class="module-card" onclick="navigate('settings')">
+                <div class="module-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                    </svg>
                 </div>
-                <h3 class="menu-title">Configuración</h3>
-                <p class="menu-description">Personaliza categorías, prioridades, flujos de trabajo, notificaciones y preferencias.</p>
-                <div class="menu-arrow">&#8594;</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Panel de Notificaciones -->
-    <div class="panel" id="notificationsPanel">
-        <div class="panel-header">
-            <h3 class="panel-title">Notificaciones</h3>
-            <button class="close-panel" onclick="closePanel('notificationsPanel')">×</button>
-        </div>
-        <div id="notificationsList">
-            <div class="notification-item">
-                <div class="notification-title">Nuevo ticket asignado</div>
-                <div class="notification-text">Se te ha asignado el ticket TKT-1007</div>
-                <div class="notification-time">Hace 5 minutos</div>
-            </div>
-            <div class="notification-item">
-                <div class="notification-title">Ticket resuelto</div>
-                <div class="notification-text">TKT-1003 ha sido marcado como resuelto</div>
-                <div class="notification-time">Hace 1 hora</div>
-            </div>
-            <div class="notification-item">
-                <div class="notification-title">Comentario nuevo</div>
-                <div class="notification-text">María García comentó en TKT-1001</div>
-                <div class="notification-time">Hace 2 horas</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Panel de Mensajes -->
-    <div class="panel" id="messagesPanel">
-        <div class="panel-header">
-            <h3 class="panel-title">Mensajes</h3>
-            <button class="close-panel" onclick="closePanel('messagesPanel')">×</button>
-        </div>
-        <div id="messagesList">
-            <div class="message-item">
-                <div class="message-sender">Carlos López</div>
-                <div class="message-text">¿Puedes revisar el ticket de la VPN?</div>
-                <div class="message-time">Hace 10 minutos</div>
-            </div>
-            <div class="message-item">
-                <div class="message-sender">Ana Martínez</div>
-                <div class="message-text">El servidor ya está funcionando correctamente</div>
-                <div class="message-time">Hace 30 minutos</div>
-            </div>
-            <div class="message-item">
-                <div class="message-sender">Roberto Silva</div>
-                <div class="message-text">Reunión de equipo a las 3 PM</div>
-                <div class="message-time">Hace 1 hora</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Menú de Usuario -->
-    <div class="user-menu" id="userMenu">
-        <div class="user-menu-header">
-            <div class="user-menu-avatar">JD</div>
-            <div class="user-menu-info">
-                <h4>Juan Díaz</h4>
-                <p>Administrador</p>
-            </div>
-        </div>
-        <div class="user-menu-item" onclick="goToProfile()">
-            <span>&#128100;</span>
-            <span>Mi Perfil</span>
-        </div>
-        <div class="user-menu-item" onclick="goToSettings()">
-            <span>&#9881;</span>
-            <span>Configuración</span>
-        </div>
-        <div class="user-menu-item" onclick="goToHelp()">
-            <span>&#10068;</span>
-            <span>Ayuda</span>
-        </div>
-        <div class="user-menu-item" onclick="logout()" style="color: #ef4444;">
-            <span>&#128682;</span>
-            <span>Cerrar Sesión</span>
-        </div>
-    </div>
-
-    <!-- Modal Crear Ticket -->
-    <div class="modal-overlay" id="createTicketModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Crear Nuevo Ticket</h2>
-                <button class="close-modal" onclick="closeCreateTicket()">×</button>
-            </div>
-            <form id="ticketForm" onsubmit="handleCreateTicket(event)">
-                <div class="form-group">
-                    <label class="form-label">Título del Ticket *</label>
-                    <input type="text" class="form-input" id="ticketTitle" required placeholder="Ej: Error en sistema de facturación">
+                <h3 class="module-title">System Settings</h3>
+                <p class="module-description">Configure system preferences, workflows, automations, integrations, and organizational settings.</p>
+                <div class="module-action">
+                    <span>Configure System</span>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Descripción *</label>
-                    <textarea class="form-textarea" id="ticketDescription" required placeholder="Describe el problema o solicitud..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Prioridad *</label>
-                    <select class="form-select" id="ticketPriority" required>
-                        <option value="">Seleccionar prioridad</option>
-                        <option value="low">Baja</option>
-                        <option value="medium">Media</option>
-                        <option value="high">Alta</option>
-                        <option value="urgent">Urgente</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Categoría *</label>
-                    <select class="form-select" id="ticketCategory" required>
-                        <option value="">Seleccionar categoría</option>
-                        <option value="Sistema">Sistema</option>
-                        <option value="Hardware">Hardware</option>
-                        <option value="Software">Software</option>
-                        <option value="Red">Red</option>
-                        <option value="Accesos">Accesos</option>
-                        <option value="Datos">Datos</option>
-                        <option value="Otro">Otro</option>
-                    </select>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn-cancel" onclick="closeCreateTicket()">Cancelar</button>
-                    <button type="submit" class="btn-submit">Crear Ticket</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
     <script>
-        // Datos de búsqueda
-        const searchableItems = [
-            { title: 'Gestión de Tickets', desc: 'Ver todos los tickets', action: () => navigate('tickets') },
-            { title: 'Mi Trabajo', desc: 'Ver mis tickets asignados', action: () => navigate('mywork') },
-            { title: 'Reportes', desc: 'Ver reportes y análisis', action: () => navigate('reports') },
-            { title: 'Usuarios', desc: 'Gestionar usuarios', action: () => navigate('users') },
-            { title: 'Configuración', desc: 'Ajustes del sistema', action: () => navigate('settings') }
-        ];
-
-        // Toggle Sidebar
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('collapsed');
-            
-            const toggleBtn = document.querySelector('.toggle-btn');
-            toggleBtn.innerHTML = sidebar.classList.contains('collapsed') ? '&#8594;' : '&#8592;';
-        }
-
-        // Navigation
         function navigate(page) {
-            const pageMap = {
+            const pages = {
                 'dashboard': 'plume-menu-animated.html',
                 'tickets': 'plume-tickets.html',
                 'mywork': 'plume-mywork.html',
-                'users': '#',
-                'teams': '#',
-                'categories': '#',
-                'reports': '#',
-                'metrics': '#',
-                'knowledge': '#',
-                'settings': '#'
+                'projects': 'plume-projects.html'
             };
-            
-            if (pageMap[page] && pageMap[page] !== '#') {
-                window.location.href = pageMap[page];
+            if (pages[page]) {
+                window.location.href = pages[page];
             } else {
-                alert('Página en desarrollo: ' + page);
+                console.log('Navigate to:', page);
             }
         }
 
-        function goHome() {
-            window.location.href = 'plume-menu-animated.html';
+        function showNotifications() {
+            console.log('Show notifications');
         }
 
-        // Búsqueda
-        const searchInput = document.getElementById('searchInput');
-        const searchResults = document.getElementById('searchResults');
-
-        searchInput.addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase().trim();
-            
-            if (query === '') {
-                searchResults.classList.remove('show');
-                return;
-            }
-
-            const results = searchableItems.filter(item => 
-                item.title.toLowerCase().includes(query) || 
-                item.desc.toLowerCase().includes(query)
-            );
-
-            if (results.length > 0) {
-                searchResults.innerHTML = results.map(item => `
-                    <div class="search-result-item" onclick='${item.action.toString().replace('() => ', '')}'>
-                        <div class="search-result-title">${item.title}</div>
-                        <div class="search-result-desc">${item.desc}</div>
-                    </div>
-                `).join('');
-                searchResults.classList.add('show');
-            } else {
-                searchResults.innerHTML = '<div class="search-result-item"><div class="search-result-title">No se encontraron resultados</div></div>';
-                searchResults.classList.add('show');
-            }
-        });
-
-        // Cerrar resultados al hacer click fuera
-        document.addEventListener('click', function(e) {
-            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-                searchResults.classList.remove('show');
-            }
-        });
-
-        // Panels
-        function toggleNotifications() {
-            const panel = document.getElementById('notificationsPanel');
-            const messagesPanel = document.getElementById('messagesPanel');
-            const userMenu = document.getElementById('userMenu');
-            
-            messagesPanel.classList.remove('show');
-            userMenu.classList.remove('show');
-            panel.classList.toggle('show');
+        function showMessages() {
+            console.log('Show messages');
         }
 
-        function toggleMessages() {
-            const panel = document.getElementById('messagesPanel');
-            const notifPanel = document.getElementById('notificationsPanel');
-            const userMenu = document.getElementById('userMenu');
-            
-            notifPanel.classList.remove('show');
-            userMenu.classList.remove('show');
-            panel.classList.toggle('show');
-        }
-
-        function closePanel(panelId) {
-            document.getElementById(panelId).classList.remove('show');
-        }
-
-        function toggleUserMenu() {
-            const menu = document.getElementById('userMenu');
-            const notifPanel = document.getElementById('notificationsPanel');
-            const messagesPanel = document.getElementById('messagesPanel');
-            
-            notifPanel.classList.remove('show');
-            messagesPanel.classList.remove('show');
-            menu.classList.toggle('show');
-        }
-
-        // Cerrar paneles al hacer click fuera
-        document.addEventListener('click', function(e) {
-            const notifBtn = document.querySelector('.action-btn:nth-child(1)');
-            const msgBtn = document.querySelector('.action-btn:nth-child(2)');
-            const userAvatar = document.querySelector('.user-avatar');
-            
-            if (!notifBtn.contains(e.target) && !document.getElementById('notificationsPanel').contains(e.target)) {
-                document.getElementById('notificationsPanel').classList.remove('show');
-            }
-            
-            if (!msgBtn.contains(e.target) && !document.getElementById('messagesPanel').contains(e.target)) {
-                document.getElementById('messagesPanel').classList.remove('show');
-            }
-            
-            if (!userAvatar.contains(e.target) && !document.getElementById('userMenu').contains(e.target)) {
-                document.getElementById('userMenu').classList.remove('show');
-            }
-        });
-
-        // User menu actions
-        function goToProfile() {
-            alert('Ir a Mi Perfil');
-            navigate('profile');
-        }
-
-        function goToSettings() {
-            navigate('settings');
-        }
-
-        function goToHelp() {
-            alert('Abrir Centro de Ayuda');
-        }
-
-        function logout() {
-            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-                alert('Cerrando sesión...');
-                // En Power Pages: redirigir a logout
-            }
-        }
-
-        // Modal Crear Ticket
         function openCreateTicket() {
-            document.getElementById('createTicketModal').classList.add('show');
-            document.body.style.overflow = 'hidden';
+            console.log('Open create ticket modal');
         }
 
-        function closeCreateTicket() {
-            document.getElementById('createTicketModal').classList.remove('show');
-            document.body.style.overflow = 'auto';
-            document.getElementById('ticketForm').reset();
+        function showUserMenu() {
+            console.log('Show user menu');
         }
 
-        function handleCreateTicket(event) {
-            event.preventDefault();
-            
-            const title = document.getElementById('ticketTitle').value;
-            const description = document.getElementById('ticketDescription').value;
-            const priority = document.getElementById('ticketPriority').value;
-            const category = document.getElementById('ticketCategory').value;
-
-            alert('✅ Ticket creado exitosamente!\n\nTítulo: ' + title + '\nPrioridad: ' + priority + '\nCategoría: ' + category);
-            
-            closeCreateTicket();
-            
-            // En Power Pages: guardar en Dataverse y redirigir
-            setTimeout(() => {
-                navigate('tickets');
-            }, 1000);
-        }
-
-        // Cerrar modal con ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeCreateTicket();
-                closePanel('notificationsPanel');
-                closePanel('messagesPanel');
-                document.getElementById('userMenu').classList.remove('show');
-            }
-        });
-
-        // Animated Counter
         function animateValue(id, start, end, duration) {
             const obj = document.getElementById(id);
             if (!obj) return;
             
-            const range = end - start;
-            const increment = end > start ? 1 : -1;
-            const stepTime = Math.abs(Math.floor(duration / range));
             let current = start;
+            const increment = (end - start) / (duration / 16);
             
             const timer = setInterval(() => {
                 current += increment;
-                obj.textContent = current;
-                if (current === end) {
+                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                    obj.textContent = Math.round(end);
                     clearInterval(timer);
+                } else {
+                    obj.textContent = Math.round(current);
                 }
-            }, stepTime);
+            }, 16);
         }
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            // Animar contadores
             setTimeout(() => {
                 animateValue('openTickets', 0, 24, 1000);
-                animateValue('pendingTickets', 0, 8, 800);
+                animateValue('pendingWork', 0, 8, 800);
                 animateValue('resolvedTickets', 0, 156, 1200);
             }, 300);
         });
